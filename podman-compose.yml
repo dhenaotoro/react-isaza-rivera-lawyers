@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  # Next.js UI on port 3000
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      # Connect to existing Java backend running on host at 8081
+      NEXT_PUBLIC_API_BASE_URL: http://host.docker.internal:8081
+      NODE_ENV: production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks: {}
+
+

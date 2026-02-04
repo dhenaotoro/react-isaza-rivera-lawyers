@@ -1,0 +1,68 @@
+{
+  "intake": {
+    "title": "Solicitud de Asesoría Legal",
+    "step": "Paso",
+    "of": "de",
+    "step1": {
+      "title": "Paso 1 — Tipo de caso",
+      "description": "Selecciona el tipo de caso legal",
+      "options": {
+        "child_support": "Cuota alimentaria",
+        "custody": "Custodia / cuidado personal",
+        "visitation": "Régimen de visitas",
+        "divorce": "Divorcio"
+      }
+    },
+    "step2": {
+      "title": "Paso 2 — Datos mínimos",
+      "description": "Por favor proporciona tu información de contacto",
+      "labels": {
+        "name": "Nombre y apellido",
+        "city": "Ciudad",
+        "whatsapp": "WhatsApp",
+        "email": "Email (opcional, pero recomendado)",
+        "minors": "¿Hay hijos menores?",
+        "description": "Descripción corta (máx 400 caracteres)"
+      },
+      "placeholders": {
+        "name": "Ingresa tu nombre completo",
+        "city": "Ingresa tu ciudad",
+        "whatsapp": "Ingresa tu número de WhatsApp",
+        "email": "Ingresa tu correo electrónico",
+        "description": "Describe tu situación brevemente..."
+      }
+    },
+    "step3": {
+      "title": "Paso 3 — Consentimiento + Disclaimer",
+      "description": "Por favor revisa y acepta los términos",
+      "labels": {
+        "dataProcessing": "Acepto tratamiento de datos personales",
+        "legalDisclaimer": "Acepto que esto es orientación inicial y la abogada confirmará viabilidad",
+        "whatsappConsent": "Autorizo recibir actualizaciones por WhatsApp (Opcional)"
+      }
+    },
+    "buttons": {
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "submit": "Guardar y agendar turno",
+      "skip": "Omitir"
+    },
+    "validation": {
+      "nameRequired": "El nombre completo es requerido",
+      "cityRequired": "La ciudad es requerida",
+      "whatsappRequired": "El número de WhatsApp es requerido",
+      "whatsappInvalid": "Número de WhatsApp inválido",
+      "emailInvalid": "Formato de correo inválido",
+      "descriptionRequired": "La descripción es requerida",
+      "descriptionMax": "La descripción no debe exceder 400 caracteres",
+      "caseTypeRequired": "Por favor selecciona un tipo de caso",
+      "dataProcessingRequired": "Debes aceptar el tratamiento de datos",
+      "disclaimerRequired": "Debes aceptar el disclaimer legal"
+    },
+    "success": "¡Tu solicitud de turno ha sido enviada exitosamente!"
+  },
+  "landing": {
+    "cta": "Empezar asesoría",
+    "description": "Responde 2–3 preguntas y agenda tu turno"
+  }
+}

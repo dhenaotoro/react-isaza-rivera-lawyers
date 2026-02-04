@@ -1,0 +1,68 @@
+{
+  "intake": {
+    "title": "Legal Advice Request",
+    "step": "Step",
+    "of": "of",
+    "step1": {
+      "title": "Type of Case",
+      "description": "Select the type of legal case",
+      "options": {
+        "child_support": "Child Support",
+        "custody": "Custody / Personal Care",
+        "visitation": "Visitation Schedule",
+        "divorce": "Divorce"
+      }
+    },
+    "step2": {
+      "title": "Basic Information",
+      "description": "Please provide your contact information",
+      "labels": {
+        "name": "Full Name",
+        "city": "City",
+        "whatsapp": "WhatsApp Number",
+        "email": "Email (Optional, but recommended)",
+        "minors": "Do you have minor children?",
+        "description": "Brief Description (Max 400 characters)"
+      },
+      "placeholders": {
+        "name": "Enter your full name",
+        "city": "Enter your city",
+        "whatsapp": "Enter your WhatsApp number",
+        "email": "Enter your email",
+        "description": "Describe your situation briefly..."
+      }
+    },
+    "step3": {
+      "title": "Consent & Disclaimer",
+      "description": "Please review and accept the terms",
+      "labels": {
+        "dataProcessing": "I accept the processing of my personal data",
+        "legalDisclaimer": "I accept that this is initial guidance and the lawyer will confirm viability",
+        "whatsappConsent": "I authorize receiving updates via WhatsApp (Optional)"
+      }
+    },
+    "buttons": {
+      "next": "Next",
+      "previous": "Previous",
+      "submit": "Save and Schedule Appointment",
+      "skip": "Skip"
+    },
+    "validation": {
+      "nameRequired": "Full name is required",
+      "cityRequired": "City is required",
+      "whatsappRequired": "WhatsApp number is required",
+      "whatsappInvalid": "Invalid WhatsApp number",
+      "emailInvalid": "Invalid email format",
+      "descriptionRequired": "Description is required",
+      "descriptionMax": "Description must not exceed 400 characters",
+      "caseTypeRequired": "Please select a case type",
+      "dataProcessingRequired": "You must accept data processing",
+      "disclaimerRequired": "You must accept the legal disclaimer"
+    },
+    "success": "Your appointment request has been submitted successfully!"
+  },
+  "landing": {
+    "cta": "Start Consultation",
+    "description": "Answer 2-3 questions and schedule your appointment"
+  }
+}
