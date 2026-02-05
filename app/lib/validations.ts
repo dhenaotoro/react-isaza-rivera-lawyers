@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Backend RequestType enums: DIVORCED, CHILD_SUPPORT, CUSTODY, DOMESTIC_VIOLENCE, OTHER
+// Enums RequestType del backend: DIVORCED, CHILD_SUPPORT, CUSTODY, DOMESTIC_VIOLENCE, OTHER
 export const CaseTypeEnum = z.enum([
   'CHILD_SUPPORT',
   'CUSTODY',

@@ -16,7 +16,7 @@ export async function POST(
       );
     }
 
-    // Forward to Java backend
+    // Reenviar al backend Java
     const javaBackendUrl = `${API_BASE_URL}/api/v1/leads/${id}/confirm`;
 
     const response = await fetch(javaBackendUrl, {

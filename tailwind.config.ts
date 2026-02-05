@@ -8,8 +8,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: '#1976d2',
-        secondary: '#dc004e',
+        primary: '#0b617e',        // Azul petróleo
+        secondary: '#e47c90',      // Palo de rosa
+        bg: '#fcffff',             // Blanco ligeramente cálido
+        beige: '#ccb28b',          // Beige para acentos
       },
     },
   },

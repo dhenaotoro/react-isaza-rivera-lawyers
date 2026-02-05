@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { POST } from '@/app/api/v1/leads/route';
 import { NextRequest } from 'next/server';
 
-// Mock fetch
+// Mockear fetch
 global.fetch = vi.fn();
 
 describe('POST /api/v1/leads', () => {
@@ -57,7 +57,7 @@ describe('POST /api/v1/leads', () => {
     const invalidLead = {
       caseType: 'invalid',
       name: 'Test',
-      // Missing required fields
+      // Faltan campos requeridos
     };
 
     const request = new NextRequest('http://localhost:3000/api/v1/leads', {

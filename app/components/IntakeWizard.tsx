@@ -73,11 +73,11 @@ export default function IntakeWizard() {
       setError(null);
 
       if (activeStep === 0) {
-        // Validate Step 1
+        // Validar Paso 1
         const step1Data: Step1 = { caseType: formData.caseType as any };
         Step1Schema.parse(step1Data);
       } else if (activeStep === 1) {
-        // Validate Step 2
+        // Validar Paso 2
         const step2Data: Step2 = {
           name: formData.name,
           city: formData.city,
@@ -88,7 +88,7 @@ export default function IntakeWizard() {
         };
         Step2Schema.parse(step2Data);
       } else if (activeStep === 2) {
-        // Validate Step 3 and submit
+        // Validar Paso 3 y enviar
         const step3Data: Step3 = {
           dataProcessing: formData.dataProcessing,
           legalDisclaimer: formData.legalDisclaimer,
@@ -96,7 +96,7 @@ export default function IntakeWizard() {
         };
         Step3Schema.parse(step3Data);
 
-        // Final validation and submission
+        // Validación final y envío
         const fullData = {
           ...formData,
           email: formData.email || undefined,
@@ -104,7 +104,7 @@ export default function IntakeWizard() {
 
         const validatedData = LeadSchema.parse(fullData);
 
-        // Submit to API
+        // Enviar al API
         setLoading(true);
         const response = await fetch('/api/v1/leads', {
           method: 'POST',

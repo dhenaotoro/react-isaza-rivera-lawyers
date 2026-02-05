@@ -3,39 +3,39 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 /**
- * Integration Test Example for IntakeWizard
- * 
- * This is a template showing how to test the full wizard flow.
- * Uncomment and adapt when the IntakeWizard component is available.
+ * Ejemplo de prueba de integración para IntakeWizard
+ *
+ * Esta es una plantilla que muestra cómo probar el flujo completo del asistente.
+ * Descomenta y adapta cuando el componente IntakeWizard esté disponible.
  */
 
 describe('IntakeWizard Integration (Template)', () => {
-  // This would test the complete user flow through all steps
+  // Esto probaría el flujo completo del usuario a través de todos los pasos
   
   it.skip('should complete full intake wizard flow', async () => {
-    // Mock the API
+    // Mockear la API
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: true,
       json: vi.fn().mockResolvedValueOnce({ success: true, id: 123 }),
     });
 
-    // Render the wizard
+    // Renderizar el asistente
     // render(<IntakeWizard />);
 
-    // Step 1: Select case type
+    // Paso 1: Seleccionar tipo de caso
     // const divorceRadio = screen.getByRole('radio', { name: /Divorcio/i });
     // await userEvent.click(divorceRadio);
     // const nextButton = screen.getByRole('button', { name: /Siguiente/i });
     // await userEvent.click(nextButton);
 
-    // Step 2: Fill basic info
+    // Paso 2: Completar información básica
     // await userEvent.type(screen.getByLabelText('Nombre y apellido'), 'Juan García');
     // await userEvent.type(screen.getByLabelText('Ciudad'), 'Bogotá');
     // await userEvent.type(screen.getByLabelText('WhatsApp'), '+573001234567');
     // await userEvent.type(screen.getByLabelText('Descripción corta'), 'Test case');
     // await userEvent.click(nextButton);
 
-    // Step 3: Accept terms
+    // Paso 3: Aceptar términos
     // await userEvent.click(
     //   screen.getByRole('checkbox', { name: /Acepto tratamiento/ })
     // );
@@ -45,7 +45,7 @@ describe('IntakeWizard Integration (Template)', () => {
     // const submitButton = screen.getByRole('button', { name: /Guardar y agendar/ });
     // await userEvent.click(submitButton);
 
-    // Wait for success message
+    // Esperar el mensaje de éxito
     // await waitFor(() => {
     //   expect(screen.getByText(/enviada exitosamente/i)).toBeInTheDocument();
     // });
@@ -53,28 +53,28 @@ describe('IntakeWizard Integration (Template)', () => {
 
   it.skip('should show validation errors', async () => {
     // render(<IntakeWizard />);
-    
-    // Try to proceed without selecting case type
+
+    // Intentar avanzar sin seleccionar tipo de caso
     // const nextButton = screen.getByRole('button', { name: /Siguiente/i });
     // await userEvent.click(nextButton);
-    
-    // Should show error or prevent navigation
+
+    // Debe mostrar error o prevenir la navegación
   });
 
   it.skip('should allow going back between steps', async () => {
     // render(<IntakeWizard />);
-    
-    // Go to step 2
+
+    // Ir al paso 2
     // const divorceRadio = screen.getByRole('radio', { name: /Divorcio/i });
     // await userEvent.click(divorceRadio);
     // const nextButton = screen.getByRole('button', { name: /Siguiente/i });
     // await userEvent.click(nextButton);
-    
-    // Go back
+
+    // Volver atrás
     // const prevButton = screen.getByRole('button', { name: /Anterior/i });
     // await userEvent.click(prevButton);
-    
-    // Should be back on step 1
+
+    // Debe volver al paso 1
     // expect(screen.getByText('Paso 1 — Tipo de caso')).toBeInTheDocument();
   });
 });

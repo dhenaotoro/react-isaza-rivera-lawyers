@@ -2,9 +2,14 @@
 
 Your project now has comprehensive testing configured with **Vitest**, **React Testing Library**, and **@testing-library/user-event**.
 
-## What Was Added
+````markdown
+# Resumen de Configuración de Vitest
 
-### 1. **Dependencies** (in `package.json`)
+Tu proyecto ahora tiene un entorno de pruebas completo configurado con **Vitest**, **React Testing Library** y **@testing-library/user-event**.
+
+## Qué se agregó
+
+### 1. **Dependencias** (en `package.json`)
 ```json
 {
   "@testing-library/jest-dom": "^6.1.5",
@@ -18,115 +23,115 @@ Your project now has comprehensive testing configured with **Vitest**, **React T
 }
 ```
 
-### 2. **Configuration Files**
-- **vitest.config.ts** - Vitest configuration with jsdom environment
-- **vitest.setup.ts** - Test setup file that imports Jest DOM matchers
+### 2. **Archivos de configuración**
+- **vitest.config.ts** - Configuración de Vitest con entorno jsdom
+- **vitest.setup.ts** - Archivo de setup que importa los matchers de Jest DOM
 
-### 3. **Test Scripts** (in `package.json`)
+### 3. **Scripts de prueba** (en `package.json`)
 ```bash
-npm run test              # Run all tests
-npm run test:ui          # Run tests with UI dashboard
-npm run test:coverage    # Generate coverage report
+npm run test              # Ejecutar todas las pruebas
+npm run test:ui           # Ejecutar pruebas con dashboard UI
+npm run test:coverage     # Generar reporte de cobertura
 ```
 
-### 4. **Test Files Created**
+### 4. **Archivos de prueba creados**
 
-#### **Unit Tests**
-- **`app/__tests__/validations.test.ts`** (78 test cases)
-  - CaseTypeEnum validation
-  - Step1Schema validation
-  - Step2Schema validation
-  - Step3Schema validation
-  - Complete LeadSchema validation
+#### **Pruebas unitarias**
+- **`app/__tests__/validations.test.ts`** (78 casos de prueba)
+  - Validación de CaseTypeEnum
+  - Validación de Step1Schema
+  - Validación de Step2Schema
+  - Validación de Step3Schema
+  - Validación completa de LeadSchema
 
-#### **API Tests**
-- **`app/api/__tests__/leads.test.ts`** (10 test cases)
-  - Valid lead submission
-  - Invalid data rejection
-  - Backend error handling
-  - Network error handling
-  - Validation error handling
+#### **Pruebas API**
+- **`app/api/__tests__/leads.test.ts`** (10 casos de prueba)
+  - Envío válido de lead
+  - Rechazo de datos inválidos
+  - Manejo de errores del backend
+  - Manejo de errores de red
+  - Manejo de errores de validación
 
-#### **Component Tests**
-- **`app/components/__tests__/Step1Form.test.tsx`** (6 test cases)
-  - Rendering all options
-  - Radio button selection
-  - onChange callbacks
+#### **Pruebas de componentes**
+- **`app/components/__tests__/Step1Form.test.tsx`** (6 casos de prueba)
+  - Renderizado de todas las opciones
+  - Selección por radio
+  - Callbacks `onChange`
 
-- **`app/components/__tests__/Step2Form.test.tsx`** (8 test cases)
-  - Form field rendering
-  - Text input handling
-  - Character count display
-  - Pre-filled values
-  - Checkbox handling
+- **`app/components/__tests__/Step2Form.test.tsx`** (8 casos de prueba)
+  - Renderizado de campos del formulario
+  - Manejo de inputs de texto
+  - Visualización de contador de caracteres
+  - Valores prellenados
+  - Manejo de checkboxes
 
-- **`app/components/__tests__/Step3Form.test.tsx`** (7 test cases)
-  - Consent checkbox rendering
-  - Checkbox state management
-  - Toggle behavior
+- **`app/components/__tests__/Step3Form.test.tsx`** (7 casos de prueba)
+  - Renderizado de checkboxes de consentimiento
+  - Gestión de estado de checkboxes
+  - Comportamiento de alternancia
 
-#### **Integration Test Template**
-- **`app/__tests__/integration.test.ts`** (template for full wizard flow)
-
----
-
-## Total Test Coverage
-
-- **102 test cases** across the entire project
-- Covers:
-  - ✅ Input validation (all fields)
-  - ✅ API request handling
-  - ✅ Component rendering
-  - ✅ User interactions
-  - ✅ Error scenarios
-  - ✅ Edge cases
+#### **Plantilla de prueba de integración**
+- **`app/__tests__/integration.test.ts`** (plantilla para flujo completo del asistente)
 
 ---
 
-## How to Run Tests
+## Cobertura total de pruebas
 
-### Installation
+- **102 casos de prueba** en todo el proyecto
+- Cubre:
+  - ✅ Validación de entradas (todos los campos)
+  - ✅ Manejo de requests API
+  - ✅ Renderizado de componentes
+  - ✅ Interacciones de usuario
+  - ✅ Escenarios de error
+  - ✅ Casos límite
+
+---
+
+## Cómo ejecutar las pruebas
+
+### Instalación
 ```bash
 npm install
 ```
 
-### Run all tests
+### Ejecutar todas las pruebas
 ```bash
 npm run test
 ```
 
-### Watch mode (auto-re-run on changes)
+### Modo watch (re-ejecuta automáticamente al cambiar archivos)
 ```bash
 npm run test -- --watch
 ```
 
-### UI Dashboard
+### Dashboard UI
 ```bash
 npm run test:ui
 ```
-Opens an interactive dashboard at `http://localhost:51204/__vitest__/`
+Abre un dashboard interactivo en `http://localhost:51204/__vitest__/`
 
-### Coverage Report
+### Reporte de cobertura
 ```bash
 npm run test:coverage
 ```
-Generates HTML report in `coverage/index.html`
+Genera un reporte HTML en `coverage/index.html`
 
 ---
 
-## Test Examples
+## Ejemplos de pruebas
 
-### Validation Test
+### Prueba de validación
 ```typescript
-it('should reject email with invalid format', () => {
+it('debe rechazar email con formato inválido', () => {
   const data = { ...validData, email: 'not-an-email' };
   expect(() => Step2Schema.parse(data)).toThrow();
 });
 ```
 
-### API Test
+### Prueba API
 ```typescript
-it('should forward valid lead to backend', async () => {
+it('debe reenviar el lead válido al backend', async () => {
   const mockFetch = vi.fn().mockResolvedValueOnce({
     ok: true,
     json: vi.fn().mockResolvedValueOnce({ id: 123 }),
@@ -138,9 +143,9 @@ it('should forward valid lead to backend', async () => {
 });
 ```
 
-### Component Test
+### Prueba de componente
 ```typescript
-it('should call onChange when selecting case type', async () => {
+it('debe llamar a onChange al seleccionar tipo de caso', async () => {
   const mockOnChange = vi.fn();
   const user = userEvent.setup();
   
@@ -153,22 +158,22 @@ it('should call onChange when selecting case type', async () => {
 
 ---
 
-## Project Structure
+## Estructura del proyecto
 
 ```
 react-isaza-rivera-lawyers/
 ├── app/
 │   ├── __tests__/
-│   │   ├── validations.test.ts      # 78 test cases
-│   │   └── integration.test.ts      # Template tests
+│   │   ├── validations.test.ts      # 78 casos de prueba
+│   │   └── integration.test.ts      # Plantillas de prueba
 │   ├── api/
 │   │   └── __tests__/
-│   │       └── leads.test.ts        # 10 test cases
+│   │       └── leads.test.ts        # 10 casos de prueba
 │   ├── components/
 │   │   ├── __tests__/
-│   │   │   ├── Step1Form.test.tsx   # 6 test cases
-│   │   │   ├── Step2Form.test.tsx   # 8 test cases
-│   │   │   └── Step3Form.test.tsx   # 7 test cases
+│   │   │   ├── Step1Form.test.tsx   # 6 casos de prueba
+│   │   │   ├── Step2Form.test.tsx   # 8 casos de prueba
+│   │   │   └── Step3Form.test.tsx   # 7 casos de prueba
 │   │   ├── Step1Form.tsx
 │   │   ├── Step2Form.tsx
 │   │   ├── Step3Form.tsx
@@ -177,57 +182,59 @@ react-isaza-rivera-lawyers/
 │   │   └── validations.ts
 │   ├── layout.tsx
 │   └── globals.css
-├── vitest.config.ts                # Vitest configuration
-├── vitest.setup.ts                 # Test setup
-├── package.json                    # Test scripts added
-├── TESTING.md                      # Comprehensive testing guide
+├── vitest.config.ts                # Configuración de Vitest
+├── vitest.setup.ts                 # Setup de pruebas
+├── package.json                    # Scripts de prueba añadidos
+├── TESTING.md                      # Guía completa de pruebas
 └── README.md
 ```
 
 ---
 
-## Key Features
+## Características clave
 
-✅ **Fast** - Entire test suite runs in < 1 second
-✅ **Isolated** - JSDOM environment for browser simulation
-✅ **Comprehensive** - 102 test cases covering all functionality
-✅ **User-Focused** - Tests what users see and do
-✅ **Maintainable** - Clear test names and organization
-✅ **Coverage-Ready** - Built-in coverage reporting
-✅ **CI/CD Ready** - Works with GitHub Actions, GitLab CI, etc.
+✅ **Rápido** - El suite completo de pruebas corre en < 1 segundo
+✅ **Aislado** - Entorno JSDOM para simulación de navegador
+✅ **Completo** - 102 casos de prueba cubriendo toda la funcionalidad
+✅ **Enfocado en el usuario** - Prueba lo que los usuarios ven y hacen
+✅ **Mantenible** - Nombres y organización claros
+✅ **Listo para cobertura** - Reportes de cobertura integrados
+✅ **Listo para CI/CD** - Funciona con GitHub Actions, GitLab CI, etc.
 
 ---
 
-## Next Steps
+## Próximos pasos
 
-1. **Run tests**
+1. **Ejecutar pruebas**
    ```bash
    npm run test
    ```
 
-2. **View coverage**
+2. **Ver cobertura**
    ```bash
    npm run test:coverage
    open coverage/index.html
    ```
 
-3. **Enable watch mode during development**
+3. **Habilitar modo watch durante el desarrollo**
    ```bash
    npm run test -- --watch
    ```
 
-4. **Add more tests** for future components using the same patterns
+4. **Agregar más pruebas** para futuros componentes usando los mismos patrones
 
-5. **Check TESTING.md** for detailed documentation
+5. **Revisar TESTING.md** para documentación detallada
 
 ---
 
-## Notes
+## Notas
 
-- Tests are **client-side focused** (components and validation)
-- API tests use **mocked fetch** to avoid network calls
-- Component tests use **React Testing Library** best practices
-- All tests follow **AAA pattern** (Arrange, Act, Assert)
-- Watch mode helps with **TDD** (Test-Driven Development)
+- Las pruebas están **orientadas al cliente** (componentes y validaciones)
+- Las pruebas API usan **fetch mockeado** para evitar llamadas de red
+- Las pruebas de componentes usan las buenas prácticas de **React Testing Library**
+- Todas las pruebas siguen el patrón **AAA** (Arrange, Act, Assert)
+- El modo watch ayuda con **TDD** (Desarrollo guiado por pruebas)
 
-Happy testing! 🧪
+¡Feliz testing! 🧪
+
+````

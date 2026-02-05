@@ -197,7 +197,7 @@ describe('Validation Schemas', () => {
     it('should reject invalid data structure', () => {
       const invalidData = {
         caseType: 'divorce',
-        // Missing required fields
+        // Faltan campos requeridos
       };
       expect(() => LeadSchema.parse(invalidData)).toThrow();
     });

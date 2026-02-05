@@ -72,12 +72,87 @@ ngrok http 3000
 
 **Test Instagram Links:**
 1. Update Next.js config for Instagram web crawler:
+````markdown
+# Guía de Pruebas para Diseño Responsivo
+
+## Ejecutar con Podman Compose
+
+```bash
+# Construir e iniciar los servicios
+podman-compose -f podman-compose.yml up --build
+
+# Ver logs
+podman-compose -f podman-compose.yml logs -f ui
+
+# Detener servicios
+podman-compose -f podman-compose.yml down
+```
+
+La aplicación estará disponible en `http://localhost:3000`
+
+---
+
+## Probar distintos tamaños de dispositivo y móviles
+
+### 1. **DevTools del navegador (recomendado para pruebas rápidas)**
+
+**Pruebas en escritorio:**
+- Abrir DevTools (F12 o Cmd+Option+I)
+- Activar el modo dispositivo o usar Ctrl+Shift+M (Cmd+Shift+M en Mac)
+- Seleccionar distintos presets de dispositivo:
+  - iPhone 12/13/14 (390x844)
+  - iPad (810x1080)
+  - Escritorio (1920x1080, 1366x768, etc.)
+- Probar orientaciones landscape/portrait
+
+**Puntos de corte comunes a probar:**
+- Móvil: 320px, 375px, 390px, 412px
+- Tablet: 768px, 810px
+- Escritorio: 1024px, 1366px, 1920px
+
+### 2. **Pruebas en dispositivos físicos**
+
+**Opción A: Red local**
+```bash
+# Obtener la IP de tu máquina
+# En Mac: ifconfig | grep "inet "
+
+# Acceder desde el móvil en la misma red
+http://<TU_IP>:3000
+```
+
+**Opción B: ngrok (exponer a Internet)**
+```bash
+# Instalar ngrok desde https://ngrok.com
+ngrok http 3000
+
+# Compartir la URL pública con quien necesites
+# Útil para compartir en Instagram
+```
+
+### 3. **Simuladores móviles**
+
+**Opción A: Depuración remota de Chrome**
+1. Conectar dispositivo Android por USB
+2. Habilitar USB Debugging
+3. En Chrome, ir a `chrome://inspect`
+4. Ver y depurar el dispositivo real
+
+**Opción B: Depuración en Safari para iOS (solo Mac)**
+1. Conectar iPhone por USB
+2. En el iPhone: Ajustes → Safari → Avanzado → Web Inspector
+3. En Safari de Mac: el menú Develop mostrará el dispositivo conectado
+
+### 4. **Pruebas de integración para Instagram**
+
+**Probar enlaces de Instagram:**
+1. Actualizar la configuración de Next.js para el crawler de Instagram:
 
 ```typescript
 // next.config.ts
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // For proper Open Graph sharing
+  // Para compartir Open Graph correctamente
   headers: async () => {
     return [
       {
@@ -93,21 +168,21 @@ const nextConfig: NextConfig = {
 };
 ```
 
-2. Share link via Instagram DM/Stories and test:
-   - Preview image loads correctly
-   - Mobile viewport appears proper
-   - Title/description are accurate
-   - Link leads to correct page
+2. Compartir el enlace por DM/Stories en Instagram y verificar:
+   - La imagen de vista previa carga correctamente
+   - El viewport móvil se ve adecuado
+   - Título/ descripción son correctos
+   - El enlace dirige a la página correcta
 
-### 5. **Automated Testing (Playwright/Cypress)**
+### 5. **Pruebas automatizadas (Playwright/Cypress)**
 
-Add a test for responsive design:
+Agregar una prueba para diseño responsivo:
 
 ```bash
 npm install --save-dev @playwright/test
 ```
 
-Create `tests/responsive.spec.ts`:
+Crear `tests/responsive.spec.ts`:
 ```typescript
 import { test, expect } from '@playwright/test';
 
@@ -118,7 +193,7 @@ const viewports = [
 ];
 
 for (const viewport of viewports) {
-  test(`loads correctly on ${viewport.name}`, async ({ browser }) => {
+  test(`carga correctamente en ${viewport.name}`, async ({ browser }) => {
     const context = await browser.newContext({
       viewport: { width: viewport.width, height: viewport.height },
     });
@@ -132,19 +207,19 @@ for (const viewport of viewports) {
 
 ---
 
-## Backend Integration Notes
+## Notas de integración del backend
 
-You can keep the backend service in `podman-compose.yml` for now:
+Puedes mantener el servicio backend en `podman-compose.yml` por ahora:
 
-**When Java backend is ready:**
-1. Update the `backend` service build path to point to your Java project
-2. Set proper environment variables (DATABASE_URL, etc.)
-3. Services communicate via the `app-network` bridge network
-4. Update `NEXT_PUBLIC_API_URL` environment variable if needed
+**Cuando el backend Java esté listo:**
+1. Actualiza la ruta de build del servicio `backend` para apuntar a tu proyecto Java
+2. Configura las variables de entorno necesarias (DATABASE_URL, etc.)
+3. Los servicios se comunican a través de la red bridge `app-network`
+4. Actualiza la variable `NEXT_PUBLIC_API_URL` si es necesario
 
-**API Calls from Frontend:**
+**Llamadas API desde el frontend:**
 ```typescript
-// In your Next.js components
+// En tus componentes Next.js
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
 
 fetch(`${API_URL}/api/leads`, {
@@ -153,29 +228,31 @@ fetch(`${API_URL}/api/leads`, {
 })
 ```
 
-The backend will be accessible via `http://backend:8081` from within the container network, but from your host machine use `http://localhost:8081`.
+El backend será accesible vía `http://backend:8081` desde dentro de la red de contenedores, pero desde tu máquina host usa `http://localhost:8081`.
 
 ---
 
-## Quick Commands Reference
+## Referencia rápida de comandos
 
 ```bash
-# Build images
+# Construir imágenes
 podman-compose build
 
-# Start in background
+# Iniciar en segundo plano
 podman-compose up -d
 
-# View specific service logs
+# Ver logs de un servicio específico
 podman-compose logs ui
 podman-compose logs backend
 
-# Restart a service
+# Reiniciar un servicio
 podman-compose restart ui
 
-# Stop and remove containers
+# Detener y eliminar contenedores
 podman-compose down
 
-# Stop but keep data
+# Detener pero conservar datos
 podman-compose stop
 ```
+
+````

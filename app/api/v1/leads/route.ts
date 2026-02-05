@@ -7,12 +7,12 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Validate the request body
+    // Validar el cuerpo de la petición
     const validatedData = LeadSchema.parse(body);
 
-    // Map frontend shape to Java backend DTO
+    // Mapear la estructura del frontend al DTO del backend Java
     const [firstName, ...rest] = validatedData.name.trim().split(/\s+/);
-    // Ensure backend-required lastName is not blank: use firstName when only one word provided
+    // Asegurar que lastName requerido por el backend no quede vacío: usar firstName cuando solo hay una palabra
     const lastName = rest.join(' ') || firstName;
 
     const payloadForBackend = {
@@ -30,10 +30,10 @@ export async function POST(request: NextRequest) {
       source: 'web',
     };
 
-    // Log outgoing payload for debugging
+    // Registrar payload saliente para depuración
     console.log('Forwarding lead to Java backend:', payloadForBackend);
 
-    // Forward to Java backend
+    // Reenviar al backend Java
     const javaBackendUrl = `${API_BASE_URL}/api/v1/leads`;
 
     const response = await fetch(javaBackendUrl, {
@@ -52,8 +52,8 @@ export async function POST(request: NextRequest) {
 
     const responseData = await response.json();
     
-    // Backend returns: { id, status, calendlyUrl, whatsappUrl }
-    // Pass through to frontend as-is
+    // El backend devuelve: { id, status, calendlyUrl, whatsappUrl }
+    // Pasar al frontend tal cual
     return NextResponse.json(responseData, { status: 201 });
   } catch (error) {
     console.error('Error processing lead:', error);

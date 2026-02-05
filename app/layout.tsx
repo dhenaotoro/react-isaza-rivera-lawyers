@@ -9,10 +9,17 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#0b617e', // Azul petróleo
     },
     secondary: {
-      main: '#dc004e',
+      main: '#e47c90', // Palo de rosa
+    },
+    info: {
+      main: '#ccb28b', // Beige como color de acento
+    },
+    background: {
+      default: '#fcffff', // Blanco
+      paper: '#ffffff',
     },
   },
   typography: {
