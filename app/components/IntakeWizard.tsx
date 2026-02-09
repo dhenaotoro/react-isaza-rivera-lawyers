@@ -24,6 +24,7 @@ import {
   Step2Schema,
   Step3Schema,
 } from '@/app/lib/validations';
+import { z } from 'zod';
 
 const translations = {
   es: {
@@ -97,12 +98,7 @@ export default function IntakeWizard() {
         Step3Schema.parse(step3Data);
 
         // Validación final y envío
-        const fullData = {
-          ...formData,
-          email: formData.email || undefined,
-        };
-
-        const validatedData = LeadSchema.parse(fullData);
+        const validatedData = LeadSchema.parse(formData);
 
         // Enviar al API
         setLoading(true);
@@ -115,7 +111,16 @@ export default function IntakeWizard() {
         });
 
         if (!response.ok) {
-          throw new Error(t.error);
+          const errorData = await response.json();
+          // Si el backend envía un campo 'message', mostrarlo
+          let userMessage = t.error;
+          if (typeof errorData.message === 'string') {
+            userMessage = errorData.message;
+          } else if (Array.isArray(errorData.message)) {
+            // Si es un array, busca el primer mensaje o concatena todos
+            userMessage = errorData.message.map((e: any) => e.message || '').join(' ');
+          }
+          throw new Error(userMessage);
         }
 
         const data = await response.json();
@@ -126,10 +131,35 @@ export default function IntakeWizard() {
 
       setActiveStep((prevStep) => prevStep + 1);
     } catch (err) {
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : 'Validation error. Please check your inputs.';
+      let errorMessage = 'Error de validación. Por favor revisa tus datos.';
+      if (err instanceof z.ZodError) {
+        const issue = err.errors[0];
+        const map: Record<string, string> = {
+          nameRequired: 'El nombre es obligatorio.',
+          cityRequired: 'La ciudad es obligatoria.',
+          whatsappRequired: 'El número de WhatsApp es obligatorio.',
+          whatsappInvalid:
+            'El número debe ser celular colombiano de 10 dígitos, con o sin +57 (ej. 3XXXXXXXXX o +573XXXXXXXXX).',
+          emailRequired: 'El correo es obligatorio.',
+          emailInvalid: 'El correo ingresado no es válido.',
+          descriptionRequired: 'La descripción es obligatoria.',
+          descriptionMax: 'La descripción no puede exceder 400 caracteres.',
+          dataProcessingRequired: 'Debes aceptar el consentimiento de datos.',
+          disclaimerRequired: 'Debes aceptar el aviso legal.',
+        };
+
+        if (issue?.code === 'invalid_enum_value' && issue.path[0] === 'caseType') {
+          errorMessage = 'Debes seleccionar un tipo de caso.';
+        } else if (issue?.message && map[issue.message]) {
+          errorMessage = map[issue.message];
+        }
+      } else if (err instanceof Error) {
+        if (err.message === 'emailInvalid') {
+          errorMessage = 'El correo ingresado no es válido.';
+        } else {
+          errorMessage = err.message;
+        }
+      }
       setError(errorMessage);
     } finally {
       setLoading(false);

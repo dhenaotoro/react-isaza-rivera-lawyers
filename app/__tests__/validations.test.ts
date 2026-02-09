@@ -11,7 +11,13 @@ import { z } from 'zod';
 describe('Validation Schemas', () => {
   describe('CaseTypeEnum', () => {
     it('should validate correct case types', () => {
-      const validTypes = ['child_support', 'custody', 'visitation', 'divorce'];
+      const validTypes = [
+        'CHILD_SUPPORT',
+        'CUSTODY',
+        'DOMESTIC_VIOLENCE',
+        'DIVORCED',
+        'OTHER',
+      ];
       validTypes.forEach((type) => {
         expect(() => CaseTypeEnum.parse(type)).not.toThrow();
       });
@@ -24,9 +30,9 @@ describe('Validation Schemas', () => {
 
   describe('Step1Schema', () => {
     it('should validate with a valid case type', () => {
-      const data = { caseType: 'child_support' };
+      const data = { caseType: 'CHILD_SUPPORT' };
       const result = Step1Schema.parse(data);
-      expect(result.caseType).toBe('child_support');
+      expect(result.caseType).toBe('CHILD_SUPPORT');
     });
 
     it('should reject missing case type', () => {
@@ -58,10 +64,9 @@ describe('Validation Schemas', () => {
       expect(result.email).toBe('juan@example.com');
     });
 
-    it('should allow empty email', () => {
+    it('should reject empty email', () => {
       const data = { ...validData, email: '' };
-      const result = Step2Schema.parse(data);
-      expect(result.email).toBe('');
+      expect(() => Step2Schema.parse(data)).toThrow();
     });
 
     it('should reject invalid email format', () => {
@@ -70,17 +75,15 @@ describe('Validation Schemas', () => {
     });
 
     it('should reject invalid WhatsApp format', () => {
-      const data = { ...validData, whatsapp: 'invalid' };
-      expect(() => Step2Schema.parse(data)).toThrow();
+      const invalidFormats = ['invalid', '300123456', '573001234567', '+1234567890'];
+      invalidFormats.forEach((whatsapp) => {
+        const data = { ...validData, whatsapp };
+        expect(() => Step2Schema.parse(data)).toThrow();
+      });
     });
 
-    it('should accept WhatsApp with various formats', () => {
-      const validFormats = [
-        '+573001234567',
-        '573001234567',
-        '+1234567890',
-        '3001234567',
-      ];
+    it('should accept WhatsApp with Colombian formats', () => {
+      const validFormats = ['+573001234567', '3001234567'];
       validFormats.forEach((whatsapp) => {
         const data = { ...validData, whatsapp };
         expect(() => Step2Schema.parse(data)).not.toThrow();
@@ -100,7 +103,7 @@ describe('Validation Schemas', () => {
     });
 
     it('should reject missing required fields', () => {
-      const fields = ['name', 'city', 'whatsapp', 'description'];
+      const fields = ['name', 'city', 'whatsapp', 'email', 'description'];
       fields.forEach((field) => {
         const data = { ...validData };
         delete (data as any)[field];
@@ -118,7 +121,7 @@ describe('Validation Schemas', () => {
     const validData = {
       dataProcessing: true,
       legalDisclaimer: true,
-      whatsappConsent: false,
+      isWhatsappConsent: false,
     };
 
     it('should validate with all required consents', () => {
@@ -140,19 +143,19 @@ describe('Validation Schemas', () => {
     it('should default whatsappConsent to false if not provided', () => {
       const data = { dataProcessing: true, legalDisclaimer: true };
       const result = Step3Schema.parse(data);
-      expect(result.whatsappConsent).toBe(false);
+      expect(result.isWhatsappConsent).toBe(false);
     });
 
     it('should allow whatsappConsent to be true', () => {
-      const data = { ...validData, whatsappConsent: true };
+      const data = { ...validData, isWhatsappConsent: true };
       const result = Step3Schema.parse(data);
-      expect(result.whatsappConsent).toBe(true);
+      expect(result.isWhatsappConsent).toBe(true);
     });
   });
 
   describe('LeadSchema', () => {
     const validLead = {
-      caseType: 'divorce',
+      caseType: 'DIVORCED',
       name: 'María López',
       city: 'Medellín',
       whatsapp: '+573109876543',
@@ -166,14 +169,14 @@ describe('Validation Schemas', () => {
 
     it('should validate a complete lead', () => {
       const result = LeadSchema.parse(validLead);
-      expect(result.caseType).toBe('divorce');
+      expect(result.caseType).toBe('DIVORCED');
       expect(result.name).toBe('María López');
       expect(result.dataProcessing).toBe(true);
     });
 
-    it('should allow optional email to be empty', () => {
+    it('should reject empty email', () => {
       const data = { ...validLead, email: '' };
-      expect(() => LeadSchema.parse(data)).not.toThrow();
+      expect(() => LeadSchema.parse(data)).toThrow();
     });
 
     it('should require dataProcessing consent', () => {
@@ -187,7 +190,13 @@ describe('Validation Schemas', () => {
     });
 
     it('should validate all case types', () => {
-      const caseTypes = ['child_support', 'custody', 'visitation', 'divorce'];
+      const caseTypes = [
+        'CHILD_SUPPORT',
+        'CUSTODY',
+        'DOMESTIC_VIOLENCE',
+        'DIVORCED',
+        'OTHER',
+      ];
       caseTypes.forEach((caseType) => {
         const data = { ...validLead, caseType: caseType as any };
         expect(() => LeadSchema.parse(data)).not.toThrow();

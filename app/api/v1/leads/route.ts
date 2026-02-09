@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LeadSchema } from '@/app/lib/validations';
+import z from 'zod';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8081';
 
@@ -58,11 +59,38 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error processing lead:', error);
 
+    let userMessage = 'Error procesando el registro.';
+    // Detectar error de Zod
+    if (error instanceof z.ZodError) {
+      const errorToCheck =(error as unknown as z.ZodError)
+      const emailError = errorToCheck.errors.find(e => e.message === 'emailInvalid');
+      if (emailError) {
+        userMessage = 'El correo ingresado no es válido.';
+      } else {
+        userMessage = errorToCheck.errors.map(e => {
+          if (e.message === 'emailInvalid') return 'El correo ingresado no es válido.';
+          if (e.message === 'whatsappInvalid') return 'El número de WhatsApp no es válido.';
+          if (e.message === 'descriptionMax') return 'La descripción no puede exceder 400 caracteres.';
+          if (e.message === 'nameRequired') return 'El nombre es obligatorio.';
+          if (e.message === 'cityRequired') return 'La ciudad es obligatoria.';
+          if (e.message === 'whatsappRequired') return 'El número de WhatsApp es obligatorio.';
+          if (e.message === 'descriptionRequired') return 'La descripción es obligatoria.';
+          if (e.message === 'dataProcessingRequired') return 'Debes aceptar el consentimiento de datos.';
+          if (e.message === 'disclaimerRequired') return 'Debes aceptar el aviso legal.';
+          return 'Campo inválido: ' + e.path.join('.');
+        }).join(' ');
+      }
+    } else if (error instanceof Error && error.message === 'emailInvalid') {
+      userMessage = 'El correo ingresado no es válido.';
+    } else if (error instanceof Error) {
+      userMessage = error.message;
+    }
+
     return NextResponse.json(
       {
         success: false,
-        message: error instanceof Error ? error.message : 'Error processing lead',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        message: userMessage,
+        error: userMessage,
       },
       { status: 400 }
     );

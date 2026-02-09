@@ -15,7 +15,7 @@ describe('POST /api/v1/leads', () => {
   });
 
   const validLead = {
-    caseType: 'divorce',
+    caseType: 'DIVORCED',
     name: 'Test User',
     city: 'Bogotá',
     whatsapp: '+573001234567',
@@ -166,13 +166,7 @@ describe('POST /api/v1/leads', () => {
     expect(response.status).toBe(400);
   });
 
-  it('should allow empty email field', async () => {
-    const mockResponse = {
-      ok: true,
-      json: vi.fn().mockResolvedValue({ id: 123, success: true }),
-    };
-    (global.fetch as any).mockResolvedValueOnce(mockResponse);
-
+  it('should reject empty email field', async () => {
     const leadWithoutEmail = {
       ...validLead,
       email: '',
@@ -184,6 +178,6 @@ describe('POST /api/v1/leads', () => {
     });
 
     const response = await POST(request);
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(400);
   });
 });

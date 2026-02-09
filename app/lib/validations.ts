@@ -9,12 +9,17 @@ export const CaseTypeEnum = z.enum([
   'OTHER',
 ]);
 
+const colombianCellRegex = /^(\+57)?3\d{9}$/;
+
 export const LeadSchema = z.object({
   caseType: CaseTypeEnum,
   name: z.string().min(1, 'nameRequired').min(2),
   city: z.string().min(1, 'cityRequired'),
-  whatsapp: z.string().min(1, 'whatsappRequired').regex(/^\+?[1-9]\d{1,14}$/, 'whatsappInvalid'),
-  email: z.string().email('emailInvalid').optional().or(z.literal('')),
+  whatsapp: z
+    .string()
+    .min(1, 'whatsappRequired')
+    .regex(colombianCellRegex, 'whatsappInvalid'),
+  email: z.string().min(1, 'emailRequired').email('emailInvalid'),
   minors: z.boolean(),
   description: z.string().min(1, 'descriptionRequired').max(400, 'descriptionMax'),
   dataProcessing: z.boolean().refine((val) => val === true, 'dataProcessingRequired'),
@@ -31,8 +36,11 @@ export const Step1Schema = z.object({
 export const Step2Schema = z.object({
   name: z.string().min(1, 'nameRequired').min(2),
   city: z.string().min(1, 'cityRequired'),
-  whatsapp: z.string().min(1, 'whatsappRequired').regex(/^\+?[1-9]\d{1,14}$/, 'whatsappInvalid'),
-  email: z.string().email('emailInvalid').optional().or(z.literal('')),
+  whatsapp: z
+    .string()
+    .min(1, 'whatsappRequired')
+    .regex(colombianCellRegex, 'whatsappInvalid'),
+  email: z.string().min(1, 'emailRequired').email('emailInvalid'),
   minors: z.boolean(),
   description: z.string().min(1, 'descriptionRequired').max(400, 'descriptionMax'),
 });

@@ -7,7 +7,6 @@ import {
   FormControlLabel,
   Checkbox,
   FormControl,
-  FormHelperText,
 } from '@mui/material';
 
 const translations = {
@@ -25,6 +24,7 @@ const translations = {
   },
 };
 
+
 interface Step3FormProps {
   formData: {
     dataProcessing: boolean;
@@ -34,7 +34,7 @@ interface Step3FormProps {
   onChange: (field: string, value: any) => void;
 }
 
-export default function Step3Form({ formData, onChange }: Step3FormProps) {
+const Step3Form: React.FC<Step3FormProps> = ({ formData, onChange }) => {
   const t = translations.es.step3;
 
   return (
@@ -52,7 +52,9 @@ export default function Step3Form({ formData, onChange }: Step3FormProps) {
             control={
               <Checkbox
                 checked={formData.dataProcessing}
-                onChange={(e) => onChange('dataProcessing', e.target.checked)}
+                onChange={(e) => {
+                  onChange('dataProcessing', e.target.checked);
+                }}
               />
             }
             label={
@@ -68,7 +70,9 @@ export default function Step3Form({ formData, onChange }: Step3FormProps) {
             control={
               <Checkbox
                 checked={formData.legalDisclaimer}
-                onChange={(e) => onChange('legalDisclaimer', e.target.checked)}
+                onChange={(e) => {
+                  onChange('legalDisclaimer', e.target.checked);
+                }}
               />
             }
             label={
@@ -97,4 +101,6 @@ export default function Step3Form({ formData, onChange }: Step3FormProps) {
       </Box>
     </Box>
   );
-}
+};
+
+export default Step3Form;

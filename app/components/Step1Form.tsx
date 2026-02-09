@@ -4,7 +4,6 @@ import React from 'react';
 import {
   FormControl,
   FormControlLabel,
-  FormHelperText,
   Radio,
   RadioGroup,
   Box,
@@ -27,6 +26,7 @@ const translations = {
   },
 };
 
+
 interface Step1FormProps {
   formData: {
     caseType: string;
@@ -34,7 +34,7 @@ interface Step1FormProps {
   onChange: (field: string, value: any) => void;
 }
 
-export default function Step1Form({ formData, onChange }: Step1FormProps) {
+const Step1Form: React.FC<Step1FormProps> = ({ formData, onChange }) => {
   const t = translations.es.step1;
 
   return (
@@ -49,14 +49,14 @@ export default function Step1Form({ formData, onChange }: Step1FormProps) {
       <FormControl fullWidth>
         <RadioGroup
           value={formData.caseType}
-          onChange={(e) => onChange('caseType', e.target.value)}
+          onChange={(e) => {
+            onChange('caseType', e.target.value);
+          }}
         >
           <FormControlLabel
             value="CHILD_SUPPORT"
             control={<Radio />}
-            label={
-              <Typography variant="body2">{t.options.CHILD_SUPPORT}</Typography>
-            }
+            label={<Typography variant="body2">{t.options.CHILD_SUPPORT}</Typography>}
             sx={{ mb: 1 }}
           />
           <FormControlLabel
@@ -68,9 +68,7 @@ export default function Step1Form({ formData, onChange }: Step1FormProps) {
           <FormControlLabel
             value="DOMESTIC_VIOLENCE"
             control={<Radio />}
-            label={
-              <Typography variant="body2">{t.options.DOMESTIC_VIOLENCE}</Typography>
-            }
+            label={<Typography variant="body2">{t.options.DOMESTIC_VIOLENCE}</Typography>}
             sx={{ mb: 1 }}
           />
           <FormControlLabel
@@ -89,4 +87,6 @@ export default function Step1Form({ formData, onChange }: Step1FormProps) {
       </FormControl>
     </Box>
   );
-}
+};
+
+export default Step1Form;
