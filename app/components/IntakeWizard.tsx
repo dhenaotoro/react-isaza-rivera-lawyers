@@ -43,6 +43,8 @@ const translations = {
   },
 };
 
+const fixedCalendlyUrl = 'https://calendly.com/danielfelipehenaotoro/30min';
+
 export default function IntakeWizard() {
   const t = translations.es;
   const [activeStep, setActiveStep] = useState(0);
@@ -51,7 +53,6 @@ export default function IntakeWizard() {
   const [success, setSuccess] = useState(false);
   const [apiResponse, setApiResponse] = useState<{
     id: string;
-    status: string;
     calendlyUrl?: string;
     whatsappUrl?: string;
   } | null>(null);
@@ -124,7 +125,38 @@ export default function IntakeWizard() {
         }
 
         const data = await response.json();
-        setApiResponse(data);
+
+        if (!data?.id) {
+          throw new Error('No se pudo confirmar el registro. Intenta de nuevo.');
+        }
+
+        const confirmResponse = await fetch(`/api/v1/leads/${data.id}/confirm`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!confirmResponse.ok) {
+          const confirmError = await confirmResponse.json().catch(() => ({}));
+          const confirmMessage =
+            typeof confirmError.message === 'string'
+              ? confirmError.message
+              : 'No se pudo agendar la cita. Intenta de nuevo.';
+          throw new Error(confirmMessage);
+        }
+
+        const confirmText = await confirmResponse.text();
+        let calendlyUrl = confirmText;
+        if (confirmText.startsWith('{')) {
+          const parsed = JSON.parse(confirmText) as { calendlyUrl?: string };
+          calendlyUrl = parsed?.calendlyUrl || '';
+        }
+
+        setApiResponse({
+          id: data.id,
+          calendlyUrl,
+        });
         setSuccess(true);
         return;
       }
@@ -196,15 +228,15 @@ export default function IntakeWizard() {
           {t.successMessage}
         </Typography>
 
-        {apiResponse && (
+        {(apiResponse || fixedCalendlyUrl) && (
           <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {apiResponse.calendlyUrl && (
+            {(apiResponse?.calendlyUrl || fixedCalendlyUrl) && (
               <Box>
                 <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
                   {t.scheduleLabel}
                 </Typography>
                 <Button
-                  href={apiResponse.calendlyUrl}
+                  href={apiResponse?.calendlyUrl || fixedCalendlyUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   variant="contained"
@@ -217,7 +249,7 @@ export default function IntakeWizard() {
               </Box>
             )}
 
-            {apiResponse.whatsappUrl && (
+            {apiResponse?.whatsappUrl && (
               <Box>
                 <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
                   {t.whatsappLabel}

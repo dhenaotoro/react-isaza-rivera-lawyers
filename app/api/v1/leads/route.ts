@@ -52,9 +52,8 @@ export async function POST(request: NextRequest) {
     }
 
     const responseData = await response.json();
-    
-    // El backend devuelve: { id, status, calendlyUrl, whatsappUrl }
-    // Pasar al frontend tal cual
+
+    // El backend devuelve: { id }
     return NextResponse.json(responseData, { status: 201 });
   } catch (error) {
     console.error('Error processing lead:', error);
