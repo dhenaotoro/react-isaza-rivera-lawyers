@@ -208,6 +208,7 @@ export default function IntakeWizard() {
   };
 
   if (success) {
+    const bookingUrl = apiResponse?.calendlyUrl || fixedCalendlyUrl;
     return (
       <Container
         maxWidth="sm"
@@ -228,26 +229,42 @@ export default function IntakeWizard() {
           {t.successMessage}
         </Typography>
 
-        {(apiResponse || fixedCalendlyUrl) && (
+        {bookingUrl && (
           <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {(apiResponse?.calendlyUrl || fixedCalendlyUrl) && (
-              <Box>
-                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-                  {t.scheduleLabel}
-                </Typography>
-                <Button
-                  href={apiResponse?.calendlyUrl || fixedCalendlyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  sx={{ textTransform: 'none', borderRadius: '8px' }}
-                >
-                  Agendar cita en Calendly
-                </Button>
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                {t.scheduleLabel}
+              </Typography>
+              <Box
+                sx={{
+                  border: '1px solid #e0e0e0',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  width: '100%',
+                  height: { xs: '720px', sm: '760px' },
+                }}
+              >
+                <iframe
+                  title="Calendly"
+                  src={bookingUrl}
+                  width="100%"
+                  height="100%"
+                  frameBorder={0}
+                  style={{ border: 'none' }}
+                />
               </Box>
-            )}
+              <Button
+                href={bookingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="outlined"
+                color="primary"
+                fullWidth
+                sx={{ mt: 2, textTransform: 'none', borderRadius: '8px' }}
+              >
+                Abrir Calendly en otra pestaña
+              </Button>
+            </Box>
 
             {apiResponse?.whatsappUrl && (
               <Box>
