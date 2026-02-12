@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   TextField,
   Box,
@@ -49,7 +49,7 @@ interface Step2FormProps {
 import { Step2Schema } from '@/app/lib/validations';
 import { z } from 'zod';
 
-const Step2Form: React.FC<Step2FormProps> = ({ formData, onChange }) => {
+const Step2Form = ({ formData, onChange }: Step2FormProps) => {
   const t = translations.es.step2;
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 

@@ -136,8 +136,7 @@ describe('Step2Form Component', () => {
     expect(screen.getByDisplayValue('Necesito ayuda')).toBeInTheDocument();
   });
 
-  it('should update character count as description changes', async () => {
-    const user = userEvent.setup();
+  it('should update character count as description changes', () => {
     const { rerender } = render(
       <Step2Form
         formData={defaultFormData}
