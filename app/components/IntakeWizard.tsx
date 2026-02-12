@@ -34,9 +34,11 @@ const translations = {
       next: 'Siguiente',
       previous: 'Anterior',
       submit: 'Guardar y agendar turno',
+      restart: 'Volver al inicio',
     },
     success: '¡Tu solicitud ha sido enviada exitosamente!',
-    successMessage: 'Pronto recibirás un mensaje de confirmación con los detalles de tu cita.',
+    successMessage:
+      'Pronto recibirás un mensaje de confirmación en tu correo con los detalles de tu cita, pero primero agéndala.',
     scheduleLabel: 'Agendar cita:',
     whatsappLabel: 'Recibir actualizaciones:',
     error: 'Hubo un error al enviar tu solicitud. Intenta de nuevo.',
@@ -44,6 +46,19 @@ const translations = {
 };
 
 const fixedCalendlyUrl = 'https://calendly.com/danielfelipehenaotoro/30min';
+
+const initialFormData = {
+  caseType: '',
+  name: '',
+  city: '',
+  whatsapp: '',
+  email: '',
+  minors: false,
+  description: '',
+  dataProcessing: false,
+  legalDisclaimer: false,
+  isWhatsappConsent: false,
+};
 
 export default function IntakeWizard() {
   const t = translations.es;
@@ -57,18 +72,7 @@ export default function IntakeWizard() {
     whatsappUrl?: string;
   } | null>(null);
 
-  const [formData, setFormData] = useState({
-    caseType: '',
-    name: '',
-    city: '',
-    whatsapp: '',
-    email: '',
-    minors: false,
-    description: '',
-    dataProcessing: false,
-    legalDisclaimer: false,
-    isWhatsappConsent: false,
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleNext = async () => {
     try {
@@ -207,6 +211,14 @@ export default function IntakeWizard() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleRestart = () => {
+    setSuccess(false);
+    setActiveStep(0);
+    setError(null);
+    setApiResponse(null);
+    setFormData(initialFormData);
+  };
+
   if (success) {
     const bookingUrl = apiResponse?.calendlyUrl || fixedCalendlyUrl;
     return (
@@ -253,17 +265,6 @@ export default function IntakeWizard() {
                   style={{ border: 'none' }}
                 />
               </Box>
-              <Button
-                href={bookingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="outlined"
-                color="primary"
-                fullWidth
-                sx={{ mt: 2, textTransform: 'none', borderRadius: '8px' }}
-              >
-                Abrir Calendly en otra pestaña
-              </Button>
             </Box>
 
             {apiResponse?.whatsappUrl && (
@@ -286,6 +287,16 @@ export default function IntakeWizard() {
             )}
           </Box>
         )}
+
+        <Button
+          onClick={handleRestart}
+          variant="outlined"
+          color="primary"
+          fullWidth
+          sx={{ mt: 3, textTransform: 'none', borderRadius: '8px' }}
+        >
+          {t.buttons.restart}
+        </Button>
       </Container>
     );
   }

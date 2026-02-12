@@ -15,6 +15,8 @@ const translations = {
     step1: {
       title: 'Paso 1 — Tipo de caso',
       description: 'Selecciona el tipo de caso legal',
+      otherHint:
+        'Si seleccionas "Otro", por favor describe tu motivo en el campo de descripción del siguiente paso.',
       options: {
         CHILD_SUPPORT: 'Cuota alimentaria',
         CUSTODY: 'Custodia / cuidado personal',
@@ -81,8 +83,13 @@ const Step1Form: React.FC<Step1FormProps> = ({ formData, onChange }) => {
             value="OTHER"
             control={<Radio />}
             label={<Typography variant="body2">{t.options.OTHER}</Typography>}
-            sx={{ mb: 1 }}
+            sx={{ mb: 0.5 }}
           />
+          {formData.caseType === 'OTHER' && (
+            <Typography variant="caption" sx={{ color: '#666', ml: 4, mb: 1 }}>
+              {t.otherHint}
+            </Typography>
+          )}
         </RadioGroup>
       </FormControl>
     </Box>

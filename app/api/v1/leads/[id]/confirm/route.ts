@@ -27,14 +27,32 @@ export async function POST(
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('Java backend error:', errorData);
-      throw new Error(errorData.message || 'Error from backend');
+      const errorText = await response.text().catch(() => '');
+      let errorMessage = 'Error from backend';
+      if (errorText) {
+        try {
+          const parsedError = JSON.parse(errorText) as { message?: string };
+          errorMessage = parsedError.message || errorMessage;
+        } catch {
+          errorMessage = errorText;
+        }
+      }
+      console.error('Java backend error:', errorMessage);
+      throw new Error(errorMessage);
     }
 
-    const responseData = await response.json();
+    const responseText = await response.text();
+    console.log('The /confirm endpoint response:', responseText);
+    if (responseText) {
+      try {
+        const responseData = JSON.parse(responseText) as Record<string, unknown>;
+        return NextResponse.json(responseData, { status: 200 });
+      } catch {
+        return NextResponse.json({ calendlyUrl: responseText }, { status: 200 });
+      }
+    }
 
-    return NextResponse.json(responseData, { status: 200 });
+    return NextResponse.json({ calendlyUrl: '' }, { status: 200 });
   } catch (error) {
     console.error('Error confirming lead:', error);
 

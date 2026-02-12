@@ -32,6 +32,11 @@ describe('Step1Form Component', () => {
     expect(screen.getByText('Violencia doméstica')).toBeInTheDocument();
     expect(screen.getByText('Divorcio')).toBeInTheDocument();
     expect(screen.getByText('Otro')).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        /Si seleccionas "Otro", por favor describe tu motivo en el campo de descripción del siguiente paso\./i
+      )
+    ).not.toBeInTheDocument();
   });
 
   it('should call onChange when selecting a case type', async () => {
@@ -87,5 +92,20 @@ describe('Step1Form Component', () => {
     await user.click(custodyRadio);
 
     expect(mockOnChange).toHaveBeenCalledWith('caseType', 'CUSTODY');
+  });
+
+  it('should show other hint when other is selected', () => {
+    render(
+      <Step1Form
+        formData={{ caseType: 'OTHER' }}
+        onChange={mockOnChange}
+      />
+    );
+
+    expect(
+      screen.getByText(
+        /Si seleccionas "Otro", por favor describe tu motivo en el campo de descripción del siguiente paso\./i
+      )
+    ).toBeInTheDocument();
   });
 });
