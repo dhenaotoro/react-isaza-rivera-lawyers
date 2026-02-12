@@ -7,8 +7,6 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
-  FormHelperText,
-  FormControl,
 } from '@mui/material';
 
 const translations = {
@@ -19,7 +17,7 @@ const translations = {
       labels: {
         name: 'Nombre y apellido',
         city: 'Ciudad',
-        whatsapp: 'WhatsApp',
+        whatsapp: 'Numero de celular',
         email: 'Email',
         minors: '¿Hay hijos menores?',
         description: 'Descripción corta (máx 400 caracteres)',
@@ -88,7 +86,7 @@ const Step2Form: React.FC<Step2FormProps> = ({ formData, onChange }) => {
         // Mapear mensajes
         const map: Record<string, string> = {
           whatsappInvalid:
-            'El número debe ser celular colombiano de 10 dígitos, con o sin +57 (ej. 3XXXXXXXXX o +573XXXXXXXXX).',
+            'Ingresa tu número con código de país. Ej: +1 415 555 1234 o +57 (300) 123-4567.',
           emailInvalid: 'El correo ingresado no es válido.',
           descriptionMax: 'La descripción no puede exceder 400 caracteres.',
         };
@@ -122,6 +120,7 @@ const Step2Form: React.FC<Step2FormProps> = ({ formData, onChange }) => {
           }}
           error={!!errors.name}
           helperText={errors.name}
+          required
           fullWidth
           size="small"
           variant="outlined"
@@ -137,6 +136,7 @@ const Step2Form: React.FC<Step2FormProps> = ({ formData, onChange }) => {
           }}
           error={!!errors.city}
           helperText={errors.city}
+          required
           fullWidth
           size="small"
           variant="outlined"
@@ -147,15 +147,22 @@ const Step2Form: React.FC<Step2FormProps> = ({ formData, onChange }) => {
           placeholder={t.placeholders.whatsapp}
           value={formData.whatsapp}
           onChange={(e) => {
-            onChange('whatsapp', e.target.value);
-            validateField('whatsapp', e.target.value);
+            const sanitized = e.target.value.replace(/[^0-9+()\-\s]/g, '').slice(0, 20);
+            onChange('whatsapp', sanitized);
+            validateField('whatsapp', sanitized);
           }}
           error={!!errors.whatsapp}
           helperText={errors.whatsapp}
+          required
           fullWidth
           size="small"
           variant="outlined"
-          type="tel"
+          type="text"
+          inputProps={{
+            inputMode: 'numeric',
+            pattern: '[0-9+()\-\s]{7,20}',
+            maxLength: 20,
+          }}
         />
 
         <TextField
@@ -168,6 +175,7 @@ const Step2Form: React.FC<Step2FormProps> = ({ formData, onChange }) => {
           }}
           error={!!errors.email}
           helperText={errors.email}
+          required
           fullWidth
           size="small"
           variant="outlined"
@@ -194,6 +202,7 @@ const Step2Form: React.FC<Step2FormProps> = ({ formData, onChange }) => {
           }}
           error={!!errors.description}
           helperText={errors.description || `${formData.description.length}/400`}
+          required
           fullWidth
           multiline
           rows={4}

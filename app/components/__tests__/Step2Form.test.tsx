@@ -41,10 +41,10 @@ describe('Step2Form Component', () => {
     );
     expect(screen.getByLabelText('Nombre y apellido')).toBeInTheDocument();
     expect(screen.getByLabelText('Ciudad')).toBeInTheDocument();
-    expect(screen.getByLabelText('WhatsApp')).toBeInTheDocument();
+    expect(screen.getByLabelText('Numero de Celular')).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
     expect(screen.getByLabelText('¿Hay hijos menores?')).toBeInTheDocument();
-    expect(screen.getByLabelText('Descripción corta')).toBeInTheDocument();
+    expect(screen.getByLabelText(/Descripción corta/i)).toBeInTheDocument();
   });
 
   it('should call onChange when name field changes', async () => {
@@ -77,7 +77,7 @@ describe('Step2Form Component', () => {
     await user.type(screen.getByLabelText('Ciudad'), 'Bogotá');
     expect(mockOnChange).toHaveBeenCalledWith('city', 'Bogotá');
 
-    await user.type(screen.getByLabelText('WhatsApp'), '+573001234567');
+    await user.type(screen.getByLabelText('Numero de Celular'), '+573001234567');
     expect(mockOnChange).toHaveBeenCalledWith('whatsapp', '+573001234567');
 
     await user.type(screen.getByLabelText(/Email/i), 'test@example.com');

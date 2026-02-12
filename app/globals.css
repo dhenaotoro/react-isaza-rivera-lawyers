@@ -28,6 +28,25 @@ body {
   background-color: var(--color-bg);
 }
 
+input:focus,
+textarea:focus,
+select:focus,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.23);
+  box-shadow: none;
+}
+
+.MuiInputLabel-outlined {
+  background-color: var(--color-bg);
+}
+
 /* Instagram-friendly mobile viewport */
 @media (max-width: 1024px) {
   html {

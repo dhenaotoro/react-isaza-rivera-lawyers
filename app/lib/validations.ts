@@ -9,7 +9,7 @@ export const CaseTypeEnum = z.enum([
   'OTHER',
 ]);
 
-const colombianCellRegex = /^(\+57)?3\d{9}$/;
+const intlPhoneRegex = /^\+?[\d\s()\-]{7,20}$/;
 
 export const LeadSchema = z.object({
   caseType: CaseTypeEnum,
@@ -18,7 +18,7 @@ export const LeadSchema = z.object({
   whatsapp: z
     .string()
     .min(1, 'whatsappRequired')
-    .regex(colombianCellRegex, 'whatsappInvalid'),
+    .regex(intlPhoneRegex, 'whatsappInvalid'),
   email: z.string().min(1, 'emailRequired').email('emailInvalid'),
   minors: z.boolean(),
   description: z.string().min(1, 'descriptionRequired').max(400, 'descriptionMax'),
@@ -39,7 +39,7 @@ export const Step2Schema = z.object({
   whatsapp: z
     .string()
     .min(1, 'whatsappRequired')
-    .regex(colombianCellRegex, 'whatsappInvalid'),
+    .regex(intlPhoneRegex, 'whatsappInvalid'),
   email: z.string().min(1, 'emailRequired').email('emailInvalid'),
   minors: z.boolean(),
   description: z.string().min(1, 'descriptionRequired').max(400, 'descriptionMax'),
