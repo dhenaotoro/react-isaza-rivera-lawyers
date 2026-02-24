@@ -24,8 +24,17 @@ describe('POST /api/v1/leads', () => {
     description: 'Test description',
     dataProcessing: true,
     legalDisclaimer: true,
-    whatsappConsent: false,
+    isWhatsappConsent: false,
   };
+
+  const buildRequest = (payload: unknown) =>
+    new NextRequest('http://localhost:3000/api/v1/leads', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
 
   it('should accept valid lead data and forward to backend', async () => {
     const mockResponse = {
@@ -34,10 +43,7 @@ describe('POST /api/v1/leads', () => {
     };
     (global.fetch as any).mockResolvedValueOnce(mockResponse);
 
-    const request = new NextRequest('http://localhost:3000/api/v1/leads', {
-      method: 'POST',
-      body: JSON.stringify(validLead),
-    });
+    const request = buildRequest(validLead);
 
     const response = await POST(request);
     const data = await response.json();
@@ -60,10 +66,7 @@ describe('POST /api/v1/leads', () => {
       // Faltan campos requeridos
     };
 
-    const request = new NextRequest('http://localhost:3000/api/v1/leads', {
-      method: 'POST',
-      body: JSON.stringify(invalidLead),
-    });
+    const request = buildRequest(invalidLead);
 
     const response = await POST(request);
     expect(response.status).toBe(400);
@@ -78,10 +81,7 @@ describe('POST /api/v1/leads', () => {
       dataProcessing: false,
     };
 
-    const request = new NextRequest('http://localhost:3000/api/v1/leads', {
-      method: 'POST',
-      body: JSON.stringify(leadWithoutConsent),
-    });
+    const request = buildRequest(leadWithoutConsent);
 
     const response = await POST(request);
     expect(response.status).toBe(400);
@@ -94,10 +94,7 @@ describe('POST /api/v1/leads', () => {
     };
     (global.fetch as any).mockResolvedValueOnce(mockResponse);
 
-    const request = new NextRequest('http://localhost:3000/api/v1/leads', {
-      method: 'POST',
-      body: JSON.stringify(validLead),
-    });
+    const request = buildRequest(validLead);
 
     const response = await POST(request);
     expect(response.status).toBe(400);
@@ -109,10 +106,7 @@ describe('POST /api/v1/leads', () => {
   it('should handle network errors', async () => {
     (global.fetch as any).mockRejectedValueOnce(new Error('Network error'));
 
-    const request = new NextRequest('http://localhost:3000/api/v1/leads', {
-      method: 'POST',
-      body: JSON.stringify(validLead),
-    });
+    const request = buildRequest(validLead);
 
     const response = await POST(request);
     expect(response.status).toBe(400);
@@ -127,10 +121,7 @@ describe('POST /api/v1/leads', () => {
       email: 'not-an-email',
     };
 
-    const request = new NextRequest('http://localhost:3000/api/v1/leads', {
-      method: 'POST',
-      body: JSON.stringify(leadWithBadEmail),
-    });
+    const request = buildRequest(leadWithBadEmail);
 
     const response = await POST(request);
     expect(response.status).toBe(400);
@@ -142,10 +133,7 @@ describe('POST /api/v1/leads', () => {
       whatsapp: 'invalid-whatsapp',
     };
 
-    const request = new NextRequest('http://localhost:3000/api/v1/leads', {
-      method: 'POST',
-      body: JSON.stringify(leadWithBadWhatsApp),
-    });
+    const request = buildRequest(leadWithBadWhatsApp);
 
     const response = await POST(request);
     expect(response.status).toBe(400);
@@ -157,10 +145,7 @@ describe('POST /api/v1/leads', () => {
       description: 'a'.repeat(401),
     };
 
-    const request = new NextRequest('http://localhost:3000/api/v1/leads', {
-      method: 'POST',
-      body: JSON.stringify(leadWithLongDescription),
-    });
+    const request = buildRequest(leadWithLongDescription);
 
     const response = await POST(request);
     expect(response.status).toBe(400);
@@ -172,10 +157,7 @@ describe('POST /api/v1/leads', () => {
       email: '',
     };
 
-    const request = new NextRequest('http://localhost:3000/api/v1/leads', {
-      method: 'POST',
-      body: JSON.stringify(leadWithoutEmail),
-    });
+    const request = buildRequest(leadWithoutEmail);
 
     const response = await POST(request);
     expect(response.status).toBe(400);

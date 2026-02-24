@@ -9,7 +9,7 @@ export const CaseTypeEnum = z.enum([
   'OTHER',
 ]);
 
-const intlPhoneRegex = /^\+?[\d\s()\-]{7,20}$/;
+const intlPhoneRegex = /^(?:\+57)?3\d{9}$/;
 
 export const LeadSchema = z.object({
   caseType: CaseTypeEnum,

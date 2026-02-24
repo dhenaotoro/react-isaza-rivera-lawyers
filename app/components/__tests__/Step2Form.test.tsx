@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { useState } from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Step2Form from '@/app/components/Step2Form';
 
@@ -13,6 +14,23 @@ describe('Step2Form Component', () => {
     email: '',
     minors: false,
     description: '',
+  };
+
+  const renderWithState = (initialData = defaultFormData) => {
+    const Wrapper = () => {
+      const [data, setData] = useState(initialData);
+      return (
+        <Step2Form
+          formData={data}
+          onChange={(field, value) => {
+            setData((prev) => ({ ...prev, [field]: value }));
+            mockOnChange(field, value);
+          }}
+        />
+      );
+    };
+
+    return render(<Wrapper />);
   };
 
   beforeEach(() => {
@@ -39,48 +57,45 @@ describe('Step2Form Component', () => {
         onChange={mockOnChange}
       />
     );
-    expect(screen.getByLabelText('Nombre y apellido')).toBeInTheDocument();
-    expect(screen.getByLabelText('Ciudad')).toBeInTheDocument();
-    expect(screen.getByLabelText('Numero de Celular')).toBeInTheDocument();
+    expect(screen.getByLabelText(/Nombre y apellido/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Ciudad/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Numero de celular/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText('¿Hay hijos menores?')).toBeInTheDocument();
+    expect(screen.getByLabelText(/¿Hay hijos menores\?/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Descripción corta/i)).toBeInTheDocument();
   });
 
   it('should call onChange when name field changes', async () => {
     const user = userEvent.setup();
-    render(
-      <Step2Form
-        formData={defaultFormData}
-        onChange={mockOnChange}
-      />
-    );
+    renderWithState();
 
-    const nameInput = screen.getByLabelText('Nombre y apellido');
+    const nameInput = screen.getByLabelText(/Nombre y apellido/i);
     await user.type(nameInput, 'Juan García');
 
     expect(mockOnChange).toHaveBeenCalledWith('name', 'Juan García');
   });
 
   it('should call onChange for all form fields', async () => {
-    const user = userEvent.setup();
-    render(
-      <Step2Form
-        formData={defaultFormData}
-        onChange={mockOnChange}
-      />
-    );
+    renderWithState();
 
-    await user.type(screen.getByLabelText('Nombre y apellido'), 'Test');
+    fireEvent.change(screen.getByLabelText(/Nombre y apellido/i), {
+      target: { value: 'Test' },
+    });
     expect(mockOnChange).toHaveBeenCalledWith('name', 'Test');
 
-    await user.type(screen.getByLabelText('Ciudad'), 'Bogotá');
+    fireEvent.change(screen.getByLabelText(/Ciudad/i), {
+      target: { value: 'Bogotá' },
+    });
     expect(mockOnChange).toHaveBeenCalledWith('city', 'Bogotá');
 
-    await user.type(screen.getByLabelText('Numero de Celular'), '+573001234567');
+    fireEvent.change(screen.getByLabelText(/Numero de celular/i), {
+      target: { value: '+573001234567' },
+    });
     expect(mockOnChange).toHaveBeenCalledWith('whatsapp', '+573001234567');
 
-    await user.type(screen.getByLabelText(/Email/i), 'test@example.com');
+    fireEvent.change(screen.getByLabelText(/Email/i), {
+      target: { value: 'test@example.com' },
+    });
     expect(mockOnChange).toHaveBeenCalledWith('email', 'test@example.com');
   });
 
@@ -92,7 +107,7 @@ describe('Step2Form Component', () => {
       />
     );
 
-    expect(screen.getByText('15/400')).toBeInTheDocument();
+    expect(screen.getByText('16/400')).toBeInTheDocument();
   });
 
   it('should call onChange when minors checkbox changes', async () => {

@@ -33,19 +33,15 @@ const translations = {
     buttons: {
       next: 'Siguiente',
       previous: 'Anterior',
-      submit: 'Guardar y agendar turno',
+      submit: 'Enviar solicitud',
       restart: 'Volver al inicio',
     },
     success: '¡Tu solicitud ha sido enviada exitosamente!',
     successMessage:
-      'Pronto recibirás un mensaje de confirmación en tu correo con los detalles de tu cita, pero primero agéndala.',
-    scheduleLabel: 'Agendar cita:',
-    whatsappLabel: 'Recibir actualizaciones:',
+      'Nos comunicaremos contigo por medio de correo y/o WhatsApp durante los próximos 5 días hábiles.',
     error: 'Hubo un error al enviar tu solicitud. Intenta de nuevo.',
   },
 };
-
-const fixedCalendlyUrl = 'https://calendly.com/danielfelipehenaotoro/30min';
 
 const initialFormData = {
   caseType: '',
@@ -66,11 +62,6 @@ export default function IntakeWizard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [apiResponse, setApiResponse] = useState<{
-    id: string;
-    calendlyUrl?: string;
-    whatsappUrl?: string;
-  } | null>(null);
 
   const [formData, setFormData] = useState(initialFormData);
 
@@ -146,21 +137,11 @@ export default function IntakeWizard() {
           const confirmMessage =
             typeof confirmError.message === 'string'
               ? confirmError.message
-              : 'No se pudo agendar la cita. Intenta de nuevo.';
+              : 'No se pudo confirmar la solicitud. Intenta de nuevo.';
           throw new Error(confirmMessage);
         }
 
-        const confirmText = await confirmResponse.text();
-        let calendlyUrl = confirmText;
-        if (confirmText.startsWith('{')) {
-          const parsed = JSON.parse(confirmText) as { calendlyUrl?: string };
-          calendlyUrl = parsed?.calendlyUrl || '';
-        }
-
-        setApiResponse({
-          id: data.id,
-          calendlyUrl,
-        });
+        await confirmResponse.text();
         setSuccess(true);
         return;
       }
@@ -215,12 +196,10 @@ export default function IntakeWizard() {
     setSuccess(false);
     setActiveStep(0);
     setError(null);
-    setApiResponse(null);
     setFormData(initialFormData);
   };
 
   if (success) {
-    const bookingUrl = apiResponse?.calendlyUrl || fixedCalendlyUrl;
     return (
       <Container
         maxWidth="sm"
@@ -241,52 +220,7 @@ export default function IntakeWizard() {
           {t.successMessage}
         </Typography>
 
-        {bookingUrl && (
-          <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Box>
-              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-                {t.scheduleLabel}
-              </Typography>
-              <Box
-                sx={{
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  width: '100%',
-                  height: { xs: '720px', sm: '760px' },
-                }}
-              >
-                <iframe
-                  title="Calendly"
-                  src={bookingUrl}
-                  width="100%"
-                  height="100%"
-                  frameBorder={0}
-                  style={{ border: 'none' }}
-                />
-              </Box>
-            </Box>
 
-            {apiResponse?.whatsappUrl && (
-              <Box>
-                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-                  {t.whatsappLabel}
-                </Typography>
-                <Button
-                  href={apiResponse.whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="outlined"
-                  color="primary"
-                  fullWidth
-                  sx={{ textTransform: 'none', borderRadius: '8px' }}
-                >
-                  Contactar por WhatsApp
-                </Button>
-              </Box>
-            )}
-          </Box>
-        )}
 
         <Button
           onClick={handleRestart}

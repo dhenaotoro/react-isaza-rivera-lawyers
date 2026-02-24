@@ -147,7 +147,12 @@ const Step2Form = ({ formData, onChange }: Step2FormProps) => {
           placeholder={t.placeholders.whatsapp}
           value={formData.whatsapp}
           onChange={(e) => {
-            const sanitized = e.target.value.replace(/[^0-9+()\-\s]/g, '').slice(0, 20);
+            let sanitized = e.target.value.replace(/[^0-9+]/g, '').slice(0, 13);
+            if (sanitized.startsWith('+')) {
+              sanitized = `+${sanitized.slice(1).replace(/\+/g, '')}`;
+            } else {
+              sanitized = sanitized.replace(/\+/g, '');
+            }
             onChange('whatsapp', sanitized);
             validateField('whatsapp', sanitized);
           }}
@@ -160,8 +165,8 @@ const Step2Form = ({ formData, onChange }: Step2FormProps) => {
           type="text"
           inputProps={{
             inputMode: 'numeric',
-            pattern: '[0-9+()\-\s]{7,20}',
-            maxLength: 20,
+            pattern: '(\\+57)?3\\d{9}',
+            maxLength: 13,
           }}
         />
 

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LeadSchema } from '@/app/lib/validations';
-import z from 'zod';
+import { ZodError } from 'zod';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8081';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const rawBody = await request.text();
+    const body = rawBody ? JSON.parse(rawBody) : {};
 
     // Validar el cuerpo de la petición
     const validatedData = LeadSchema.parse(body);
@@ -56,33 +57,39 @@ export async function POST(request: NextRequest) {
     // El backend devuelve: { id }
     return NextResponse.json(responseData, { status: 201 });
   } catch (error) {
-    console.error('Error processing lead:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Error processing lead:', errorMessage);
 
     let userMessage = 'Error procesando el registro.';
-    // Detectar error de Zod
-    if (error instanceof z.ZodError) {
-      const errorToCheck =(error as unknown as z.ZodError)
-      const emailError = errorToCheck.errors.find(e => e.message === 'emailInvalid');
-      if (emailError) {
+
+    try {
+      if (error instanceof ZodError) {
+        const emailError = error.errors.find((e) => e.message === 'emailInvalid');
+        if (emailError) {
+          userMessage = 'El correo ingresado no es válido.';
+        } else {
+          userMessage = error.errors
+            .map((e) => {
+              if (e.message === 'emailInvalid') return 'El correo ingresado no es válido.';
+              if (e.message === 'whatsappInvalid') return 'El número de WhatsApp no es válido.';
+              if (e.message === 'descriptionMax') return 'La descripción no puede exceder 400 caracteres.';
+              if (e.message === 'nameRequired') return 'El nombre es obligatorio.';
+              if (e.message === 'cityRequired') return 'La ciudad es obligatoria.';
+              if (e.message === 'whatsappRequired') return 'El número de WhatsApp es obligatorio.';
+              if (e.message === 'descriptionRequired') return 'La descripción es obligatoria.';
+              if (e.message === 'dataProcessingRequired') return 'Debes aceptar el consentimiento de datos.';
+              if (e.message === 'disclaimerRequired') return 'Debes aceptar el aviso legal.';
+              return `Campo inválido: ${e.path.join('.')}`;
+            })
+            .join(' ');
+        }
+      } else if (error instanceof Error && error.message === 'emailInvalid') {
         userMessage = 'El correo ingresado no es válido.';
-      } else {
-        userMessage = errorToCheck.errors.map(e => {
-          if (e.message === 'emailInvalid') return 'El correo ingresado no es válido.';
-          if (e.message === 'whatsappInvalid') return 'El número de WhatsApp no es válido.';
-          if (e.message === 'descriptionMax') return 'La descripción no puede exceder 400 caracteres.';
-          if (e.message === 'nameRequired') return 'El nombre es obligatorio.';
-          if (e.message === 'cityRequired') return 'La ciudad es obligatoria.';
-          if (e.message === 'whatsappRequired') return 'El número de WhatsApp es obligatorio.';
-          if (e.message === 'descriptionRequired') return 'La descripción es obligatoria.';
-          if (e.message === 'dataProcessingRequired') return 'Debes aceptar el consentimiento de datos.';
-          if (e.message === 'disclaimerRequired') return 'Debes aceptar el aviso legal.';
-          return 'Campo inválido: ' + e.path.join('.');
-        }).join(' ');
+      } else if (error instanceof Error) {
+        userMessage = error.message;
       }
-    } else if (error instanceof Error && error.message === 'emailInvalid') {
-      userMessage = 'El correo ingresado no es válido.';
-    } else if (error instanceof Error) {
-      userMessage = error.message;
+    } catch {
+      userMessage = 'Error procesando el registro.';
     }
 
     return NextResponse.json(

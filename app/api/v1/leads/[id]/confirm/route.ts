@@ -48,11 +48,11 @@ export async function POST(
         const responseData = JSON.parse(responseText) as Record<string, unknown>;
         return NextResponse.json(responseData, { status: 200 });
       } catch {
-        return NextResponse.json({ calendlyUrl: responseText }, { status: 200 });
+        return NextResponse.json({ message: responseText }, { status: 200 });
       }
     }
 
-    return NextResponse.json({ calendlyUrl: '' }, { status: 200 });
+    return NextResponse.json({ message: 'Lead confirmed successfully' }, { status: 200 });
   } catch (error) {
     console.error('Error confirming lead:', error);
 
